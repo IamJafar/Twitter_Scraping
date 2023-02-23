@@ -54,7 +54,7 @@ if st.button("View DataFrame"):
     
 # Button 2 - To upload the data to mongoDB database
 if st.button("Upload the data to MongoDB"):
-    col.delete_many({})
+    col.delete_many({})   #Deleting old records in the collection
     col.insert_many(df.to_dict('records'))
     st.success('Upload to MongoDB Successful!', icon="✅")
 
