@@ -4,20 +4,24 @@ import pandas as pd
 import pymongo
 import streamlit as st
 
-# twitter scraping image and sub heading
+# twitter scraping image,Titles and sub-heading
 st.image("TS.png")
 st.subheader("Scrape Tweets with any keywords or Hashtag as you wish!")
+st.sidebar.title("**:blue[:wave: Hello there!!!]**")
+st.sidebar.header("**:blue[Kindly fill the below details to begin Scraping Tweets] :point_down:**")
 
-# Variable declaration for user inputs
-hashtag = st.text_input("Enter the keyword or Hashtag you need to get : ")
-tweets_count = st.number_input("Enter the number of Tweets to Scrape : ", min_value= 1, max_value= 1000, step= 1)
-start_date = st.date_input("Select Start date (YYYY-MM-DD) : ")
-end_date = st.date_input("Select End date (YYYY-MM-DD) : ")
+# Variable declaration for user inputs(Keyword and Number of tweets)
+hashtag = st.sidebar.text_input("Enter the keyword or Hashtag you need to get : ")
+tweets_count = st.sidebar.number_input("Enter the number of Tweets to Scrape : ", min_value= 1, max_value= 1000, step= 1)
+st.sidebar.subheader(":blue[Select the date range] :calendar:")
+start_date = st.sidebar.date_input("Start date (YYYY-MM-DD) : ")
+end_date = st.sidebar.date_input("End date (YYYY-MM-DD) : ")
 
 # Creating an empty list
 tweets_list = []
-
-if hashtag and tweets_count:
+# Enabling the Checkbox only when the hashtag is entered
+if hashtag:
+    st.sidebar.checkbox("**Scrape Tweets**")
     
     # Using for loop, TwitterSearchScraper and enumerate function to scrape data and append tweets to list
     for i,tweet in enumerate(sntwitter.TwitterSearchScraper(f"{hashtag} since:{start_date} until:{end_date}").get_items()):
@@ -34,29 +38,13 @@ if hashtag and tweets_count:
                             tweet.lang,
                             tweet.source
                            ])
+else:
+    st.sidebar.checkbox("**Scrape Tweets**",disabled=True)
         
 # Creating DataFrame with the scraped tweets
 def data_frame(data):
     return pd.DataFrame(data, columns= ['datetime', 'user_id', 'url', 'tweet_content', 'user_name',
-                                         'reply_count', 'retweet_count', 'like_count', 'language', 'source'
-                                        ])
-df = data_frame(tweets_list)
-
-# Bridging a connection with MongoDB Atlas and Creating a new database(twitterscraping) and collections(scraped_data)
-client = pymongo.MongoClient("mongodb+srv://jafarhussain:1996@cluster0.4gaz2ol.mongodb.net/?retryWrites=true&w=majority")
-db = client.twitterscraping
-col = db.scraped_data
-
-# Button 1 - To view the DataFrame
-if st.button("View DataFrame"):
-    st.success("**:blue[Here is the DataFrame of the Scraped Tweets]**", icon="⬇️")
-    st.write(df)
-    
-# Button 2 - To upload the data to mongoDB database
-if st.button("Upload the data to MongoDB"):
-    col.delete_many({})   #Deleting old records in the collection
-    col.insert_many(df.to_dict('records'))
-    st.success('Upload to MongoDB Successful!', icon="✅")
+                                         'reply_count', 'retweet_count', 'like_count', 'language', 'source'])
 
 # Converting DataFrame to CSV file
 def convert_to_csv(c):
@@ -66,10 +54,32 @@ def convert_to_csv(c):
 def convert_to_json(j):
     return j.to_json(orient='index')
 
+# Variable declaration for dataframe and file conversion
+df = data_frame(tweets_list)
 csv = convert_to_csv(df)
 json = convert_to_json(df)
 
-st.success("**:blue[Like to download the data use the below buttons!!!]**",icon="⬇️")
+# Bridging a connection with MongoDB Atlas and Creating a new database(twitterscraping) and collections(scraped_data)
+client = pymongo.MongoClient("mongodb+srv://jafarhussain:1996@cluster0.4gaz2ol.mongodb.net/?retryWrites=true&w=majority")
+db = client.twitterscraping
+col = db.scraped_data
+
+# Button 1 - To view the DataFrame
+if st.button("View DataFrame"):
+    st.success("**:blue[DataFrame Fetched Successfully]**", icon="✅")
+    st.write(df)
+    
+# Button 2 - To upload the data to mongoDB database
+if st.button("Upload the data to MongoDB"):
+    try:
+        col.delete_many({}) #Deleting old records from the collection
+        col.insert_many(df.to_dict('records'))
+        st.success('Upload to MongoDB Successful!', icon="✅")
+    except:
+        st.error('You cannot upload an empty dataset. Kindly enter the information in the leftside menu.', icon="🚨")
+
+# Header Diff Options to download the dataframe
+st.subheader("**:blue[To download the data use the below buttons :arrow_down:]**")
 
 # Button 3 - To download data as CSV
 st.download_button(label="Download data as CSV",
