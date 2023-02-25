@@ -3,6 +3,7 @@ import snscrape.modules.twitter as sntwitter
 import pandas as pd
 import pymongo
 import streamlit as st
+from datetime import date
 
 # twitter scraping image,Titles and sub-heading
 st.image("TS.png")
@@ -16,6 +17,7 @@ tweets_count = st.sidebar.number_input("Enter the number of Tweets to Scrape : "
 st.sidebar.subheader(":blue[Select the date range] :calendar:")
 start_date = st.sidebar.date_input("Start date (YYYY-MM-DD) : ")
 end_date = st.sidebar.date_input("End date (YYYY-MM-DD) : ")
+today = str(date.today())
 
 # Creating an empty list
 tweets_list = []
@@ -63,17 +65,21 @@ json = convert_to_json(df)
 client = pymongo.MongoClient("mongodb+srv://jafarhussain:1996@cluster0.4gaz2ol.mongodb.net/?retryWrites=true&w=majority")
 db = client.twitterscraping
 col = db.scraped_data
+scr_data = {"Scraped_word" : hashtag,
+            "Scraped_date" : today,
+            "Scraped_data" : df.to_dict('records')
+           }
 
-# Button 1 - To view the DataFrame
+# BUTTON 1 - To view the DataFrame
 if st.button("View DataFrame"):
     st.success("**:blue[DataFrame Fetched Successfully]**", icon="✅")
     st.write(df)
     
-# Button 2 - To upload the data to mongoDB database
+# BUTTON 2 - To upload the data to mongoDB database
 if st.button("Upload the data to MongoDB"):
     try:
         col.delete_many({}) #Deleting old records from the collection
-        col.insert_many(df.to_dict('records'))
+        col.insert_one(scr_data)
         st.success('Upload to MongoDB Successful!', icon="✅")
     except:
         st.error('You cannot upload an empty dataset. Kindly enter the information in the leftside menu.', icon="🚨")
@@ -81,14 +87,14 @@ if st.button("Upload the data to MongoDB"):
 # Header Diff Options to download the dataframe
 st.subheader("**:blue[To download the data use the below buttons :arrow_down:]**")
 
-# Button 3 - To download data as CSV
+# BUTTON 3 - To download data as CSV
 st.download_button(label="Download data as CSV",
                    data=csv,
                    file_name='scraped_tweets_data.csv',
                    mime='text/csv'
                   )
 
-# Button 4 - To download data as JSON
+# BUTTON 4 - To download data as JSON
 st.download_button(label="Download data as JSON",
                    data=json,
                    file_name='scraped_tweets_data.json',
