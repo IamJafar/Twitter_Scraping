@@ -56,7 +56,7 @@ def convert_to_csv(c):
 def convert_to_json(j):
     return j.to_json(orient='index')
 
-# Variable declaration for dataframe and file conversion
+# Creating objects for dataframe and file conversion
 df = data_frame(tweets_list)
 csv = convert_to_csv(df)
 json = convert_to_json(df)
@@ -88,15 +88,15 @@ if st.button("Upload the data to MongoDB"):
 st.subheader("**:blue[To download the data use the below buttons :arrow_down:]**")
 
 # BUTTON 3 - To download data as CSV
-st.download_button(label="Download data as CSV",
-                   data=csv,
-                   file_name='scraped_tweets_data.csv',
-                   mime='text/csv'
+st.download_button(label= "Download data as CSV",
+                   data= csv,
+                   file_name= 'scraped_tweets_data.csv',
+                   mime= 'text/csv'
                   )
 
 # BUTTON 4 - To download data as JSON
-st.download_button(label="Download data as JSON",
-                   data=json,
-                   file_name='scraped_tweets_data.json',
-                   mime='text/csv'
+st.download_button(label= "Download data as JSON",
+                   data= json,
+                   file_name= 'scraped_tweets_data.json',
+                   mime= 'text/csv'
                   )
