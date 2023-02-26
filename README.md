@@ -13,14 +13,15 @@
   3. Snscrape
   4. Getoldtweets3
   
-	For my project I have used SNSCRAPE library.
+  For my project I have used SNSCRAPE library.
    
 # Libraries and Modules needed for the project!
 
-	1. snscrape.modules.twitter - (To Scrape the Data from Twitter)
-	2. Pandas - (To Create a DataFrame with the scraped data)
-	3. Pymongo - (To upload the dataframe to MongoDB database)
-	4. Streamlit - (To Create Graphical user Interface)
+ 1. snscrape.modules.twitter - (To Scrape the Data from Twitter)
+ 2. Pandas - (To Create a DataFrame with the scraped data)
+ 3. Pymongo - (To upload the dataframe to MongoDB database)
+ 4. Streamlit - (To Create Graphical user Interface)
+ 5. Datetime - (To get the current date)
 	
 
 # Snscrape
@@ -34,6 +35,38 @@
   To know more about Streamlit do visit the official site- https://docs.streamlit.io/library/api-reference
   
 # Workflow
+  Lets us see the workflow of the twitter scraping project by breakingdown it step by step.
+  
+### Step 1
+  Importing the libraries.
+  As I have already mentioned above the list of libraries/modules needed for the project. First we have to import all those libraries. Before that check if the libraries are already installed or not by using the below piece of code.
+  	
+	!pip install ["Name of the library"]
+	
+  If the libraries are already installed then we have to import those into our script by mentioning the below codes.
+  	
+	import snscrape.modules.twitter as sntwitter
+	import pandas as pd
+	import pymongo
+	import streamlit as st
+	from datetime import date	
+### Step 2
+  Getting inputs from the user. In the below code I have created the list of variables for getting user input.
+  
+  1. Keyword or Hashtag the user needed to search for **(hashtag)**
+  2. Number of tweets the user wants to scrape **(tweets_count)**
+  3. Tweets posted since date **(start_date)**
+  4. Tweets posted until date **(end_date)**
+  5. Date when the user is scraping the tweets **(today)**. Im getting this date with the help of **datetime** module 
+  
+	hashtag = st.sidebar.text_input("Enter the keyword or Hashtag you need to get : ")
+	tweets_count = st.sidebar.number_input("Enter the number of Tweets to Scrape : ", min_value= 1, max_value= 1000, step= 1)
+	start_date = st.sidebar.date_input("Start date (YYYY-MM-DD) : ")
+	end_date = st.sidebar.date_input("End date (YYYY-MM-DD) : ")
+	today = str(date.today())
+
+  
+
   
 
   
