@@ -181,7 +181,7 @@ delete_many will delete the previous records from the collection and then the ne
 			  )
   
   
-    To run this script go to the Terminal and type the below command, you will get a new window opened in your browser there we can interact with the streamlit user interface.
+  To run this script go to the Terminal and type the below command, you will get a new window opened in your browser there we can interact with the streamlit user interface.
     
     	streamlit run Twitter_Scraping.py
   
