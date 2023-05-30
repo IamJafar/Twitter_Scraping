@@ -62,7 +62,7 @@ csv = convert_to_csv(df)
 json = convert_to_json(df)
 
 # Bridging a connection with MongoDB Atlas and Creating a new database(twitterscraping) and collections(scraped_data)
-client = pymongo.MongoClient("mongodb+srv://jafarhussain:1996@cluster0.4gaz2ol.mongodb.net/?retryWrites=true&w=majority")
+client = pymongo.MongoClient("your unique client id")
 db = client.twitterscraping
 col = db.scraped_data
 scr_data = {"Scraped_word" : hashtag,
